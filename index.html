@@ -5,11 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>DOKB BOK 2026 — Advokasi Web v2.0</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Tailwind CDN for utility classes used in JS renders -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-
   <div id="app">
     <header id="app-header">
       <div class="header-logo">
@@ -21,22 +19,17 @@
           <div class="header-subtitle">Advokasi Real-time v2.0</div>
         </div>
       </div>
-      <div class="header-badge">SINKRONISASI CLOUD</div>
+      <div class="header-badge" id="syncStatus">SINKRONISASI CLOUD</div>
     </header>
-
     <main id="main-content">
       <div id="tabContent">
-        <!-- Content will be rendered here by app.js -->
         <div class="flex items-center justify-center h-64">
-          <div class="animate-pulse text-slate-400 text-sm font-mono">Menghubungkan ke Google Sheets...</div>
+          <div class="animate-pulse text-slate-400 text-sm font-mono">Menginisialisasi Sistem...</div>
         </div>
       </div>
     </main>
-
     <nav id="tabNav"></nav>
   </div>
-
-  <!-- Load consolidated app.js -->
   <script src="app.js"></script>
 </body>
 </html>
