@@ -1,4 +1,4 @@
-const API_URL = "URL_WEB_APP_BAPAK_DISINI";
+const API_URL = "https://script.google.com/macros/s/AKfycbya30OudyZtyH7IJMktsLjvzBM1oSl79ZHOxtkjwSlhOpjnNeaPoigzqV2CwvXzReM7/exec";
 
 let DATA = {
   meta: { totalResponden: 119, respondenValid: 116, tahunSurvei: 2026, wilayah: "Kalimantan Selatan" },
