@@ -456,6 +456,7 @@ const TABS = [
   { id:"dashboard", label:"Dashboard", icon:"🗂", render: renderDashboard },
   { id:"simulasi", label:"Simulasi", icon:"🧮", render: renderSimulasiOrder },
   { id:"advokasi", label:"Advokasi", icon:"⚖️", render: renderAnalisisAdvokasi },
+  { id:"transparansi", label:"Transparansi", icon:"🔍", render: renderTransparansiAplikator },
 ];
 
 let currentTab = "panduan";
@@ -470,6 +471,7 @@ function switchTab(tabId) {
     content.scrollTop = 0;
     if (tabId === "koreksi") updateKoreksi();
     if (tabId === "simulasi") hitungSimulasi();
+    if (tabId === "transparansi") hitungTransparansi();
   }
 }
 
@@ -517,3 +519,137 @@ document.addEventListener("DOMContentLoaded", async () => {
   await loadData();
   switchTab("panduan");
 });
+
+// ═══════════════════════════════════════════════════════════
+// TRANSPARANSI APLIKATOR
+// ═══════════════════════════════════════════════════════════
+function renderTransparansiAplikator() {
+  return `<div class="space-y-5">
+    <div class="stat-card rounded-2xl p-4">
+      <h3 class="text-white font-bold text-sm mb-1">🔍 Simulasi Transparansi Aplikator</h3>
+      <p class="text-slate-400 text-xs">Hitung potongan efektif riil aplikator dan bandingkan dengan batas maksimal PM 118/2018 (20%).</p>
+    </div>
+
+    <div class="stat-card rounded-2xl p-4">
+      <h3 class="text-white font-bold text-sm mb-3">Input Data Perjalanan</h3>
+      <div class="space-y-3">
+        ${[
+          ["Total Dibayar Pelanggan (Rp)", "trxPelanggan", "68500"],
+          ["Pendapatan Diterima Driver (Rp)", "trxDriver", "53600"],
+          ["Biaya Jasa Aplikasi — dibebankan ke pelanggan (Rp)", "trxJasaApp", "5500"],
+          ["Biaya Asuransi Perjalanan — dibebankan ke pelanggan (Rp)", "trxAsuransi", "1000"],
+          ["Diskon Voucher — ditanggung aplikator (Rp)", "trxVoucher", "5000"],
+        ].map(([l,id,def]) => `
+          <div>
+            <label class="text-slate-400 text-xs block mb-1">${l}</label>
+            <input type="number" id="${id}" value="${def}" class="inp-blue w-full font-mono text-sm" oninput="hitungTransparansi()" />
+          </div>`).join("")}
+      </div>
+    </div>
+
+    <div id="hasilTransparansi" class="space-y-3"></div>
+  </div>`;
+}
+
+function hitungTransparansi() {
+  const pelanggan = +document.getElementById("trxPelanggan")?.value || 0;
+  const driver    = +document.getElementById("trxDriver")?.value || 0;
+  const jasaApp   = +document.getElementById("trxJasaApp")?.value || 0;
+  const asuransi  = +document.getElementById("trxAsuransi")?.value || 0;
+  const voucher   = +document.getElementById("trxVoucher")?.value || 0;
+
+  if (!pelanggan || !driver) return;
+
+  // Biaya perjalanan murni (sebelum biaya tambahan)
+  const tarifMurni = pelanggan - jasaApp - asuransi + voucher;
+
+  // Potongan nominal dari tarif murni
+  const potonganNominal = tarifMurni - driver;
+
+  // Potongan % dari tarif murni (klaim aplikator)
+  const potonganKlaim = tarifMurni > 0 ? (potonganNominal / tarifMurni) * 100 : 0;
+
+  // Total masuk ke aplikator (potongan + jasa app + asuransi - voucher)
+  const totalAplikator = potonganNominal + jasaApp + asuransi;
+
+  // Potongan efektif riil dari total pelanggan bayar
+  const potonganEfektif = pelanggan > 0 ? ((pelanggan - driver) / pelanggan) * 100 : 0;
+
+  // Potongan efektif dari tarif murni
+  const potonganEfektifDariTarif = tarifMurni > 0 ? (totalAplikator / tarifMurni) * 100 : 0;
+
+  const BATAS_PM118 = 20;
+  const patuh = potonganEfektifDariTarif <= BATAS_PM118;
+
+  const el = document.getElementById("hasilTransparansi");
+  if (!el) return;
+
+  el.innerHTML = `
+    <div class="stat-card rounded-2xl p-4 space-y-2 text-xs">
+      <p class="text-white font-bold text-sm mb-2">📊 Rincian Perhitungan</p>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Total dibayar pelanggan</span>
+        <span class="text-white font-mono">${FMT.idr(pelanggan)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Biaya jasa aplikasi (terpisah)</span>
+        <span class="text-red-400 font-mono">- ${FMT.idr(jasaApp)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Biaya asuransi (terpisah)</span>
+        <span class="text-red-400 font-mono">- ${FMT.idr(asuransi)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Diskon voucher (ditanggung aplikator)</span>
+        <span class="text-green-400 font-mono">+ ${FMT.idr(voucher)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-700">
+        <span class="text-blue-400 font-bold">Tarif perjalanan murni</span>
+        <span class="text-blue-400 font-mono font-bold">${FMT.idr(tarifMurni)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Pendapatan driver</span>
+        <span class="text-green-400 font-mono">${FMT.idr(driver)}</span>
+      </div>
+      <div class="flex justify-between py-1 border-b border-slate-800">
+        <span class="text-slate-400">Potongan dari tarif murni (klaim)</span>
+        <span class="text-amber-400 font-mono">${FMT.idr(potonganNominal)} (${potonganKlaim.toFixed(1)}%)</span>
+      </div>
+      <div class="flex justify-between py-1">
+        <span class="text-slate-400">Total masuk ke aplikator</span>
+        <span class="text-red-400 font-mono font-bold">${FMT.idr(totalAplikator)}</span>
+      </div>
+    </div>
+
+    <div class="stat-card rounded-2xl p-4 border-l-4 ${patuh ? 'border-green-500' : 'border-red-500'}">
+      <p class="text-white font-bold text-sm mb-3">⚖️ Analisis Kepatuhan PM 118/2018</p>
+      <div class="space-y-2 text-xs">
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Potongan klaim aplikator</span>
+          <span class="text-amber-400 font-mono font-bold">${potonganKlaim.toFixed(1)}%</span>
+        </div>
+        <div class="flex justify-between py-1 border-b border-slate-800">
+          <span class="text-slate-400">Potongan efektif riil (termasuk biaya tambahan)</span>
+          <span class="${patuh ? 'text-green-400' : 'text-red-400'} font-mono font-bold">${potonganEfektifDariTarif.toFixed(1)}%</span>
+        </div>
+        <div class="flex justify-between py-1">
+          <span class="text-slate-400">Batas maksimal PM 118/2018</span>
+          <span class="text-white font-mono font-bold">20,0%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rounded-2xl p-4 text-center ${patuh ? 'bg-green-950 bg-opacity-40 border border-green-700' : 'bg-red-950 bg-opacity-40 border border-red-700'}">
+      <p class="text-white font-bold text-lg">${patuh ? '✅ PATUH' : '🔴 MELAMPAUI BATAS PM 118/2018'}</p>
+      <p class="text-3xl font-bold font-mono ${patuh ? 'text-green-400' : 'text-red-400'} mt-1">${potonganEfektifDariTarif.toFixed(1)}%</p>
+      <p class="text-slate-400 text-xs mt-1">Potongan efektif riil aplikator</p>
+      ${!patuh ? `<p class="text-red-400 text-xs mt-2 font-bold">Melampaui batas ${(potonganEfektifDariTarif - BATAS_PM118).toFixed(1)}% dari ketentuan</p>` : ''}
+    </div>
+
+    ${!patuh ? `
+    <div class="stat-card rounded-2xl p-4 border-l-4 border-amber-500">
+      <p class="text-amber-400 font-bold text-sm mb-2">📋 Dasar Hukum</p>
+      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 61 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
+    </div>` : ''}
+  `;
+}
