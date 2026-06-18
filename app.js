@@ -752,7 +752,7 @@ function hitungTransparansi() {
     ${!patuh ? `
     <div class="stat-card rounded-2xl p-4 border-l-4 border-amber-500">
       <p class="text-amber-400 font-bold text-sm mb-2">📋 Dasar Hukum</p>
-      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 61 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
+      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 27 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
     </div>` : ''}
   `;
 }
