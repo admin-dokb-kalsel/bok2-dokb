@@ -414,25 +414,73 @@ function renderAnalisisAdvokasi() {
   const { koreksi, regulasi, rekomendasi, agregasi } = DATA;
   const selisihTbb = rekomendasi.tbbKoreksi - regulasi.tbb;
   const pctNaik = ((rekomendasi.tbbKoreksi / regulasi.tbb) - 1) * 100;
-  return `<div class="space-y-5">
+
+  const yuridis = [
+    {
+      num: "1",
+      title: "Kewenangan Gubernur Menetapkan Tarif",
+      color: "border-blue-500",
+      badge: "text-blue-400",
+      body: "Berdasarkan Pasal 22 ayat (2) PM 118 Tahun 2018, Gubernur memiliki kewenangan penuh menetapkan TBB dan TBA ASK untuk wilayah operasi dalam 1 provinsi. SK Gubernur Kalsel 2025 adalah pelaksanaan sah dari mandat Menteri ini.",
+      dasar: "PM 118/2018 Pasal 22 ayat (2)"
+    },
+    {
+      num: "2",
+      title: "Batas Maksimal Potongan & Larangan Menetapkan Tarif Sendiri",
+      color: "border-amber-500",
+      badge: "text-amber-400",
+      body: "Pasal 27 huruf a PM 118/2018 melarang Perusahaan Aplikasi menetapkan tarif sendiri. Dipertegas SK Gubernur Kalsel No. 0991/2025 Diktum KEEMPAT: TBB Rp4.000/km dan minimal Rp16.000 adalah PENDAPATAN BERSIH driver — potongan aplikator tidak boleh mengurangi angka tersebut.",
+      dasar: "PM 118/2018 Pasal 27 huruf a + SK Gubernur Diktum KEEMPAT"
+    },
+    {
+      num: "3",
+      title: "Sifat Mengikat SK Gubernur",
+      color: "border-green-500",
+      badge: "text-green-400",
+      body: "Tidak ada pasal dalam PM 118/2018 yang menyatakan SK Gubernur tidak mengikat. Pasal 22 memberikan mandat kepada Gubernur sebagai wakil pemerintah pusat di daerah. Mengabaikan SK ini berarti aplikator melakukan pembangkangan terhadap regulasi negara.",
+      dasar: "PM 118/2018 Pasal 22"
+    },
+    {
+      num: "4",
+      title: "Kewajiban Perusahaan Aplikasi",
+      color: "border-purple-500",
+      badge: "text-purple-400",
+      body: "Pasal 27 huruf b PM 118/2018 melarang aplikator memberikan promosi tarif di bawah TBB yang telah ditetapkan. Pasal 25 mewajibkan aplikator melaporkan tarifnya kepada Gubernur. Layanan 'Hemat' yang di bawah TBB adalah bentuk pelanggaran nyata.",
+      dasar: "PM 118/2018 Pasal 25 & Pasal 27 huruf b"
+    },
+    {
+      num: "5",
+      title: "Konsekuensi Hukum Pelanggaran Tarif",
+      color: "border-red-500",
+      badge: "text-red-400",
+      body: "Jika aplikator melanggar ketentuan tarif, pemerintah berwenang menjatuhkan sanksi administratif sesuai PM 118/2018 berupa: peringatan tertulis, pembekuan izin, hingga pencabutan izin penyelenggaraan.",
+      dasar: "PM 118/2018 — Ketentuan Sanksi"
+    },
+  ];
+
+  return `<div class="space-y-4">
     <div class="hero-card p-4 rounded-2xl">
-      <h2 class="text-lg font-bold text-white">⚖️ Narasi Advokasi DOKB</h2>
-      <p class="text-slate-400 text-xs">Argumen berbasis data untuk revisi tarif ASK Kalsel 2026</p>
+      <h2 class="text-lg font-bold text-white">⚖️ Analisa Yuridis Penegakan Tarif ASK</h2>
+      <p class="text-slate-400 text-xs">Berdasarkan PM 118/2018, SK Gubernur Kalsel 2025 & Surat Dirjenhubdat PR.301/1/11/DRJD/2022</p>
     </div>
-    <div class="stat-card p-4 rounded-2xl border-l-4 border-red-500">
-      <p class="text-white font-bold text-sm mb-1">🔴 Masalah: Tarif SK Tidak Layak</p>
-      <p class="text-slate-300 text-xs">TBB SK Gubernur ${FMT.idr(regulasi.tbb,0)}/km lebih rendah dari BOK Koreksi ${FMT.idr(koreksi.totalBokKoreksi,0)}/km. Driver menanggung kerugian ${FMT.idr(koreksi.totalBokKoreksi - regulasi.tbb,0)} setiap kilometer.</p>
+
+    <div class="stat-card p-4 rounded-2xl border-l-4 border-amber-400">
+      <p class="text-amber-400 font-bold text-xs mb-1">⚠️ Catatan Penting</p>
+      <p class="text-slate-300 text-xs">Surat Dirjenhubdat PR.301/1/11/DRJD/2022 menyatakan bahwa SE 3244/2017 <span class="text-white font-bold">sudah tidak sesuai nilainya</span> dengan kondisi saat ini. Aplikator tidak dapat lagi menggunakan SE 3244/2017 sebagai acuan tarif yang relevan.</p>
     </div>
-    <div class="stat-card p-4 rounded-2xl border-l-4 border-blue-500">
-      <p class="text-white font-bold text-sm mb-1">📊 Bukti: Data ${agregasi.totalResponden || 119} Driver Kalsel</p>
-      <p class="text-slate-300 text-xs">Survei terhadap rata-rata ${agregasi.kmPerBulan} km/bln menunjukkan BOK riil ${FMT.idr(agregasi.bokSurvei,0)}/km — belum termasuk gaji, BPJS, asuransi, dan overhaul yang tidak tersurvei.</p>
-    </div>
-    <div class="stat-card p-4 rounded-2xl border-l-4 border-green-500">
-      <p class="text-white font-bold text-sm mb-1">✅ Solusi: Revisi Tarif +${FMT.pct(pctNaik,1)}</p>
-      <p class="text-slate-300 text-xs">TBB layak berbasis metodologi KOREKSI_BOK adalah ${FMT.idr(rekomendasi.tbbKoreksi,0)}/km — naik ${FMT.idr(selisihTbb,0)} dari SK saat ini. Ini bukan tuntutan — ini kebutuhan minimum ekonomi driver.</p>
-    </div>
+
+    ${yuridis.map(p => `
+    <div class="stat-card p-4 rounded-2xl border-l-4 ${p.color}">
+      <div class="flex items-start gap-2 mb-2">
+        <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-800 ${p.badge}">${p.num}</span>
+        <p class="text-white font-bold text-xs">${p.title}</p>
+      </div>
+      <p class="text-slate-300 text-xs mb-2">${p.body}</p>
+      <p class="text-xs ${p.badge} font-mono">📌 ${p.dasar}</p>
+    </div>`).join("")}
+
     <div class="stat-card p-4 rounded-2xl">
-      <p class="text-white font-bold text-sm mb-2">📋 Ringkasan Tuntutan</p>
+      <p class="text-white font-bold text-sm mb-2">📋 Ringkasan Tuntutan DOKB</p>
       <div class="space-y-2 text-xs">
         ${[["TBB", regulasi.tbb, rekomendasi.tbbKoreksi], ["TBA", regulasi.tba, rekomendasi.tbaKoreksi], ["Min 0-3km", regulasi.tarifMin, rekomendasi.t03Koreksi]].map(([l,sk,rek]) => `
           <div class="flex justify-between items-center py-1 border-b border-slate-800">
@@ -443,8 +491,14 @@ function renderAnalisisAdvokasi() {
           </div>`).join("")}
       </div>
     </div>
+
+    <div class="stat-card p-4 rounded-2xl border border-green-700">
+      <p class="text-green-400 font-bold text-xs mb-1">💬 Posisi DOKB</p>
+      <p class="text-slate-300 text-xs italic">"DOKB tidak menetapkan tarif — itu kewenangan Pemerintah. DOKB hanya membuktikan dengan data bahwa tarif saat ini tidak mencerminkan BOK riil driver, dan menuntut kepatuhan aplikator terhadap regulasi yang berlaku."</p>
+    </div>
   </div>`;
 }
+
 
 const TABS = [
   { id:"panduan", label:"Panduan", icon:"📋", render: renderPanduan },
@@ -649,7 +703,7 @@ function hitungTransparansi() {
     ${!patuh ? `
     <div class="stat-card rounded-2xl p-4 border-l-4 border-amber-500">
       <p class="text-amber-400 font-bold text-sm mb-2">📋 Dasar Hukum</p>
-      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 27 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
+      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 61 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
     </div>` : ''}
   `;
 }
