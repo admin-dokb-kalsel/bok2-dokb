@@ -524,7 +524,7 @@ function renderAnalisisAdvokasi() {
         </div>
         <div class="p-2 rounded-lg bg-slate-800 text-xs">
           <p class="text-slate-400 mb-1">Tarif contoh berdasarkan formula SK Gubernur:</p>
-          ${[[3,"20.000","0 km sisa"],[4,"25.000","1 km sisa × Rp 5.000"],[7,"35.000","4 km sisa × Rp 5.000"],[10,"45.000","7 km sisa × Rp 5.000"]].map(([km,total,ket]) => `
+          ${[[3,"20.000","0 km sisa"],[4,"25.000","1 km sisa × Rp 5.000"],[7,"40.000","4 km sisa × Rp 5.000"],[10,"55.000","7 km sisa × Rp 5.000"]].map(([km,total,ket]) => `
           <div class="flex justify-between py-0.5 border-b border-slate-700">
             <span class="text-slate-400">${km} km</span>
             <span class="text-white font-mono font-bold">Rp ${total}</span>
