@@ -492,6 +492,55 @@ function renderAnalisisAdvokasi() {
       </div>
     </div>
 
+    <div class="stat-card p-4 rounded-2xl border-l-4 border-red-500">
+      <p class="text-red-400 font-bold text-sm mb-2">⚠️ Indikasi Predatory Pricing</p>
+      <p class="text-slate-300 text-xs mb-2">Predatory pricing terjadi ketika aplikator menetapkan atau membiarkan tarif beroperasi di bawah BOK riil driver — kerugian ditanggung driver, bukan perusahaan.</p>
+      <div class="space-y-1 text-xs mt-2">
+        ${[
+          "Tarif layanan tertentu di bawah TBB SK Gubernur",
+          "Formula flagfall tidak konsisten antar aplikator",
+          "Potongan efektif melebihi batas PM 118 Pasal 27 karena biaya tambahan dibebankan terpisah ke pelanggan",
+          "Aplikator menolak membuka data BOK — tidak ada dasar pembanding setara",
+        ].map(t => `<div class="flex gap-2"><span class="text-red-400">🔴</span><span class="text-slate-300">${t}</span></div>`).join("")}
+      </div>
+      ${accordion('acc_predatory', 'Dasar Hukum Predatory Pricing', `
+        <p class="text-slate-400">UU No. 5/1999 tentang Larangan Praktik Monopoli dan Persaingan Usaha Tidak Sehat.</p>
+        <p class="text-amber-400 mt-1">Jika pelanggaran SK Gubernur dan PM 118 berlanjut, Pemerintah Provinsi dapat meneruskan ke KPPU atas dugaan praktik persaingan usaha tidak sehat.</p>
+      `)}
+    </div>
+
+    <div class="stat-card p-4 rounded-2xl border-l-4 border-amber-500">
+      <p class="text-amber-400 font-bold text-sm mb-2">⚖️ Formula Jalan Tengah DOKB</p>
+      <div class="space-y-2 text-xs">
+        <div class="p-3 rounded-lg bg-slate-800 space-y-1">
+          <p class="text-white font-bold font-mono text-center text-sm">Flagfall = Rp 20.000/trip (net driver)</p>
+          <p class="text-slate-400 text-center">= TBB × 3km + Idle & Risk Buffer</p>
+          <p class="text-slate-400 text-center">= (Rp 5.000 × 3) + Rp 5.000</p>
+          <p class="text-green-400 text-center font-bold">= Rp 15.000 + Rp 5.000 = Rp 20.000 ✅</p>
+        </div>
+        <div class="p-2 rounded-lg bg-blue-950 bg-opacity-40 text-xs">
+          <p class="text-blue-400 font-bold mb-1">📊 Dasar Data:</p>
+          <p class="text-slate-300">116 driver valid dalam survei BOK 2026 menyatakan Rp 20.000 sebagai flagfall yang layak — bukan angka DOKB, ini suara lapangan langsung.</p>
+        </div>
+        <div class="p-2 rounded-lg bg-slate-800 text-xs">
+          <p class="text-slate-400 mb-1">Tarif contoh berdasarkan formula SK Gubernur:</p>
+          ${[[3,"20.000","0 km sisa"],[4,"25.000","1 km sisa × Rp 5.000"],[7,"35.000","4 km sisa × Rp 5.000"],[10,"45.000","7 km sisa × Rp 5.000"]].map(([km,total,ket]) => `
+          <div class="flex justify-between py-0.5 border-b border-slate-700">
+            <span class="text-slate-400">${km} km</span>
+            <span class="text-white font-mono font-bold">Rp ${total}</span>
+            <span class="text-slate-500">${ket}</span>
+          </div>`).join("")}
+        </div>
+        ${[["TBB", "Rp 4.000/km", "Rp 5.000/km", "+25%"], ["TBA", "Rp 6.500/km", "Rp 8.125/km", "+25%"], ["Flagfall 0-3km", "Rp 16.000", "Rp 20.000", "+25%"], ["Potongan", "Maks 20%", "15-18%", "PM 118 Ps.27"]].map(([l,lama,baru,pct]) => `
+          <div class="flex justify-between items-center py-1 border-b border-slate-800">
+            <span class="text-slate-400">${l}</span>
+            <span class="text-red-400 line-through text-xs">${lama}</span>
+            <span class="text-green-400 font-bold">${baru}</span>
+            <span class="text-amber-400 font-bold">${pct}</span>
+          </div>`).join("")}
+      </div>
+    </div>
+
     <div class="stat-card p-4 rounded-2xl border border-green-700">
       <p class="text-green-400 font-bold text-xs mb-1">💬 Posisi DOKB</p>
       <p class="text-slate-300 text-xs italic">"DOKB tidak menetapkan tarif — itu kewenangan Pemerintah. DOKB hanya membuktikan dengan data bahwa tarif saat ini tidak mencerminkan BOK riil driver, dan menuntut kepatuhan aplikator terhadap regulasi yang berlaku."</p>
@@ -703,7 +752,7 @@ function hitungTransparansi() {
     ${!patuh ? `
     <div class="stat-card rounded-2xl p-4 border-l-4 border-amber-500">
       <p class="text-amber-400 font-bold text-sm mb-2">📋 Dasar Hukum</p>
-      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 27 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
+      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 61 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
     </div>` : ''}
   `;
 }
