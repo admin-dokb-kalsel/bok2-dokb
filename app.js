@@ -49,10 +49,10 @@ const CALC = {
 
 function accordion(id, title, content) {
   return `<div class="mt-2">
-    <button onclick="toggleAcc('${id}')" class="w-full text-left text-xs text-amber-400 flex items-center gap-1 py-1">
+    <button onclick="toggleAcc('${id}')" style="width:100%;text-align:left;font-size:11px;color:#F59E0B;display:flex;align-items:center;gap:4px;padding:4px 0;background:none;border:none;cursor:pointer;">
       <span id="arr_${id}">▶</span> ${title}
     </button>
-    <div id="${id}" class="hidden bg-slate-900 bg-opacity-60 rounded-xl p-3 mt-1 text-xs font-mono text-slate-300 space-y-1">
+    <div id="${id}" class="hidden" style="background:rgba(15,23,42,0.85);border:1px solid #2D3F55;border-radius:12px;padding:12px;margin-top:4px;font-size:11px;font-family:'DM Mono',monospace;color:#CBD5E1;display:none;">
       ${content}
     </div>
   </div>`;
@@ -62,8 +62,9 @@ function toggleAcc(id) {
   const el = document.getElementById(id);
   const arr = document.getElementById('arr_' + id);
   if (!el) return;
-  el.classList.toggle('hidden');
-  arr.textContent = el.classList.contains('hidden') ? '▶' : '▼';
+  const isHidden = el.style.display === 'none' || el.style.display === '';
+  el.style.display = isHidden ? 'block' : 'none';
+  arr.textContent = isHidden ? '▼' : '▶';
 }
 
 function renderPanduan() {
