@@ -11,7 +11,7 @@ let DATA = {
   ]},
   koreksi: { umkKalsel: 3725000, hargaKendaraan: 175000000, bpjsPengemudi: 504000, asuransiPenumpang: 180000, profitPct: 0.10, totalBokKoreksi: 4207.51 },
   regulasi: { tbb: 4000, tba: 6500, tarifMin: 16000 },
-  rekomendasi: { tbbKoreksi: 5912, tbaKoreksi: 9607, t03Koreksi: 19510, tbbSurvei: 4017, tbaSurvei: 6528, t03Survei: 13256 },
+  rekomendasi: { tbbKoreksi: 5000, tbaKoreksi: 8125, t03Koreksi: 20000, tbbSurvei: 4017, tbaSurvei: 6528, t03Survei: 13256 },
 };
 
 const FMT = {
@@ -524,7 +524,7 @@ function renderAnalisisAdvokasi() {
         </div>
         <div class="p-2 rounded-lg bg-slate-800 text-xs">
           <p class="text-slate-400 mb-1">Tarif contoh berdasarkan formula SK Gubernur:</p>
-          ${[[3,"20.000","0 km sisa"],[4,"25.000","1 km sisa × Rp 5.000"],[7,"40.000","4 km sisa × Rp 5.000"],[10,"55.000","7 km sisa × Rp 5.000"]].map(([km,total,ket]) => `
+          ${[[3,"20.000","0 km sisa"],[4,"25.000","1 km sisa × Rp 5.000"],[7,"35.000","4 km sisa × Rp 5.000"],[10,"45.000","7 km sisa × Rp 5.000"]].map(([km,total,ket]) => `
           <div class="flex justify-between py-0.5 border-b border-slate-700">
             <span class="text-slate-400">${km} km</span>
             <span class="text-white font-mono font-bold">Rp ${total}</span>
@@ -752,7 +752,7 @@ function hitungTransparansi() {
     ${!patuh ? `
     <div class="stat-card rounded-2xl p-4 border-l-4 border-amber-500">
       <p class="text-amber-400 font-bold text-sm mb-2">📋 Dasar Hukum</p>
-      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 27 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
+      <p class="text-slate-300 text-xs">PM Perhubungan No. 118 Tahun 2018 Pasal 61 menetapkan biaya jasa aplikasi maksimal <span class="text-white font-bold">20%</span> dari tarif perjalanan. Biaya-biaya tambahan yang dibebankan terpisah ke pelanggan di luar potongan resmi perlu dievaluasi kesesuaiannya dengan ketentuan yang berlaku.</p>
     </div>` : ''}
   `;
 }
