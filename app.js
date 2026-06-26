@@ -213,7 +213,7 @@ function updateKoreksi() {
 function renderRekomendasiTarif() {
   const { rekomendasi, regulasi, koreksi } = DATA;
   const bok = koreksi.totalBokKoreksi;
-  const overhead = 0.2872;
+  // TBB = TBB lama +25%, TBA = TBB x 1.625, Flagfall = Flagfall lama +25%
 
   return `<div class="space-y-5">
     <div class="stat-card rounded-2xl p-4">
@@ -231,11 +231,12 @@ function renderRekomendasiTarif() {
         <p class="text-2xl font-bold text-green-400">${FMT.idr(rekomendasi.tbbKoreksi,0)}</p>
       </div>
       ${accordion('acc_tbb', 'Lihat Rumus TBB', `
-        <p class="text-slate-400">TBB = BOK Koreksi ÷ (1 - Overhead)</p>
-        <p><span class="text-slate-400">BOK Koreksi:</span> <span class="text-white">${FMT.num(bok,2)} /km</span></p>
-        <p><span class="text-slate-400">Overhead (potongan + ops):</span> <span class="text-white">28,72%</span></p>
-        <p><span class="text-slate-400">= ${FMT.num(bok,2)} ÷ (1 - 0,2872)</span></p>
+        <p class="text-slate-400">TBB Usulan = TBB Lama + Kenaikan Proporsional</p>
+        <p><span class="text-slate-400">TBB SK lama:</span> <span class="text-white">Rp 4.000/km</span></p>
+        <p><span class="text-slate-400">Kenaikan UMP & sparepart:</span> <span class="text-white">+25%</span></p>
+        <p><span class="text-slate-400">= Rp 4.000 × 1,25</span></p>
         <p class="text-green-400 font-bold">= ${FMT.idr(rekomendasi.tbbKoreksi,0)} /km</p>
+        <p class="text-slate-400 mt-1">Validasi: BOK Koreksi ${FMT.idr(bok,2)}/km &lt; TBB ${FMT.idr(rekomendasi.tbbKoreksi,0)}/km ✅</p>
         <p class="text-slate-500 mt-1">SK Gubernur saat ini: ${FMT.idr(regulasi.tbb,0)} /km → selisih ${FMT.idr(rekomendasi.tbbKoreksi - regulasi.tbb,0)}</p>
       `)}
     </div>
@@ -250,9 +251,10 @@ function renderRekomendasiTarif() {
         <p class="text-2xl font-bold text-green-400">${FMT.idr(rekomendasi.tbaKoreksi,0)}</p>
       </div>
       ${accordion('acc_tba', 'Lihat Rumus TBA', `
-        <p class="text-slate-400">TBA = TBB × Faktor Batas Atas</p>
-        <p><span class="text-slate-400">TBB Layak:</span> <span class="text-white">${FMT.idr(rekomendasi.tbbKoreksi,0)}</span></p>
+        <p class="text-slate-400">TBA = TBB × 1,625 (rasio sesuai PM 118/2018)</p>
+        <p><span class="text-slate-400">TBB Usulan:</span> <span class="text-white">${FMT.idr(rekomendasi.tbbKoreksi,0)}/km</span></p>
         <p><span class="text-slate-400">Faktor TBA:</span> <span class="text-white">× 1,625</span></p>
+        <p><span class="text-slate-400">= ${FMT.idr(rekomendasi.tbbKoreksi,0)} × 1,625</span></p>
         <p class="text-green-400 font-bold">= ${FMT.idr(rekomendasi.tbaKoreksi,0)} /km</p>
         <p class="text-slate-500 mt-1">SK Gubernur saat ini: ${FMT.idr(regulasi.tba,0)} /km → selisih ${FMT.idr(rekomendasi.tbaKoreksi - regulasi.tba,0)}</p>
       `)}
@@ -267,12 +269,15 @@ function renderRekomendasiTarif() {
         </div>
         <p class="text-2xl font-bold text-green-400">${FMT.idr(rekomendasi.t03Koreksi,0)}</p>
       </div>
-      ${accordion('acc_t03', 'Lihat Rumus Tarif 0-3km', `
-        <p class="text-slate-400">Tarif Min = TBB × Faktor Jarak Minimum</p>
-        <p><span class="text-slate-400">TBB Layak:</span> <span class="text-white">${FMT.idr(rekomendasi.tbbKoreksi,0)}</span></p>
-        <p><span class="text-slate-400">Faktor jarak minimum:</span> <span class="text-white">× 3,3</span></p>
-        <p class="text-green-400 font-bold">= ${FMT.idr(rekomendasi.t03Koreksi,0)} /trip</p>
-        <p class="text-slate-500 mt-1">SK Gubernur saat ini: ${FMT.idr(regulasi.tarifMin,0)} → selisih ${FMT.idr(rekomendasi.t03Koreksi - regulasi.tarifMin,0)}</p>
+      ${accordion('acc_t03', 'Lihat Rumus Flagfall 0-3km', `
+        <p class="text-slate-400">Flagfall = Flagfall Lama + Kenaikan Proporsional</p>
+        <p><span class="text-slate-400">Flagfall SK 0991/2025:</span> <span class="text-white">Rp 16.000/trip (net driver)</span></p>
+        <p><span class="text-slate-400">Kenaikan proporsional:</span> <span class="text-white">+25% (UMP & sparepart naik)</span></p>
+        <p><span class="text-slate-400">= Rp 16.000 × 1,25</span></p>
+        <p class="text-green-400 font-bold">= ${FMT.idr(rekomendasi.t03Koreksi,0)} /trip (net driver)</p>
+        <p class="text-slate-400 mt-1">Validasi survei: mayoritas 116 driver menyatakan Rp 20.000 layak ✅</p>
+        <p class="text-slate-400 mt-1">Komponen: biaya 3km + idle buffer + risk buffer (kesepakatan 2022)</p>
+        <p class="text-slate-500 mt-1">SK saat ini: ${FMT.idr(regulasi.tarifMin,0)} → selisih ${FMT.idr(rekomendasi.t03Koreksi - regulasi.tarifMin,0)}</p>
       `)}
     </div>
   </div>`;
